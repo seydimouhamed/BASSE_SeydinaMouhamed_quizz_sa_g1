@@ -3,7 +3,7 @@
           <div class="h4 text-center  ">Connexion</div>
 
         <br>
-        <form id="mainform">
+        <form id="mainform" method="post">
           <div class="row rowip">
             <div class="labip col-md-3">Login</div>
             <div class="quadip "></div>
@@ -24,7 +24,7 @@
         <small id="error-pwd" class="error text-danger "></small>
         <br>
         <div class="row">
-            <button type="submit" id="connexion" value='connexion' class="form-control ubtn">Connexion</button>
+            <button id="connexion" value='connexion' class="form-control ubtn">Connexion</button>
         </div>
         <div class="text-center">OU</div>
         <div class="row">

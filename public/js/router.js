@@ -3,12 +3,12 @@ var connexion=document.getElementById('connexion');
 var container=document.getElementById('container');
 
 inscription.onclick=()=>{
-    sendData();
+    sendData('inscription');
 }
 
 
 
-function sendData(id, idForm) 
+function sendData(origin) 
 {
     // document.getElementById(idForm).innerHTML = data;
 
@@ -22,11 +22,30 @@ function sendData(id, idForm)
             //document.getElementById(idForm).innerHTML = ajx.responseText;
         }
     };
-    ajx.open("GET", "index.php?origin=inscription", true);
+    var data=getFormData();
+    ajx.open("POST", `index.php?origin=${origin}`, true);
     ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    ajx.send();
+    ajx.send(data);
 
 
     return false;
         
+}
+
+function getFormData()
+{
+    //var form=document.getElementById(idForm);
+    var elements = document.getElementById("mainform").elements;
+    var data="";
+    for (var i = 0; i < elements.length; i++) {
+        var item = elements.item(i);
+
+                data += [item.name] + "=" + item.value;
+
+        if ((i + 1) != elements.length) {
+            data += "&";
+        }
+    }
+
+    return data;
 }

@@ -8,7 +8,7 @@ for (let input of inputs) {
     })
 }
 
-document.getElementById("mainform").addEventListener("submit", function (e) {
+document.getElementById("connexion").addEventListener("click", function (e) {
     const inputs = document.getElementsByTagName("input");
     var error = false;
     for (let input of inputs) {
