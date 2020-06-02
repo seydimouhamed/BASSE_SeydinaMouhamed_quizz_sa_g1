@@ -61,7 +61,7 @@ vard_dump($req->fetch());
 
     function registerUserAvatar($avatar)
     {
-        $target_dir = "public/imageUsers/";
+        $target_dir = "public/images/photo/";
         //avoir le temps en millisecondes
         $mt = explode(" ",microtime());
         $currenttime = (((int)$mt[1]) * 1000 + ((int)round($mt[0] * 1000)));

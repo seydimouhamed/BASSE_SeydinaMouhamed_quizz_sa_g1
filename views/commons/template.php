@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
     <title>QUIZZ</title>
     <!-- Required meta tags -->
@@ -9,15 +9,21 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="public/css/main.css" class="href">
+
 </head>
-  <body class="all" id="all">
+  <body class="all">
+    <div id="all">
         <div id="nav">
+            <?php// require_once "./views/commons/navbarrev2.php";?>
             <?php require_once "./views/commons/navbarre.php";?>
         </div>
 
-        <div id="container" class="container col-md-6 justify-content-center  ">          
-            <?php require_once "./views/commons/connexion.php";?>
+             <!-- <div id="container" class="container-fluid">  -->
+        <div id="container" class="container col-md-6 col-sm-9 col-10 justify-content-center  "> 
+            <?php  require_once "./views/commons/connexion.php";?>          
+            <?php //require_once "./views/admin/accueil.php";?>
         </div>
+    </div>    
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

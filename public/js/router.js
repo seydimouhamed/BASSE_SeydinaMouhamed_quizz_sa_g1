@@ -1,51 +1,49 @@
-var inscription=document.getElementById('inscription');
-var connexion=document.getElementById('connexion');
-var container=document.getElementById('container');
+//var deconnexion = document.getElementById('deconnexion');
+var page=document.getElementById('all');
 
-inscription.onclick=()=>{
-    sendData('inscription');
+// deconnexion.onclick=()=>{
+//     alert('ok');
+//     //deconnexion.innerText="ok";
+//     //sendData('deconnexion',page,false)
+// }
+function prevUpload() {
+    //alert('ok');
+   // document.getElementById('error_f').innerText = "";
+    var file = document.getElementById("avatar").files[0];
+    var reader = new FileReader();
+    if (file) {
+        reader.readAsDataURL(file);
+        reader.onloadend = function () {
+            document.getElementById("photo").src = reader.result;
+        }
+    }
 }
 
-
-
-function sendData(origin) 
-{
-    // document.getElementById(idForm).innerHTML = data;
+function sendData(o, is_dataPost, cont = page,is_file=false) {
 
     var ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
-
         if (ajx.readyState == 4 && ajx.status == 200) {
-
             let data = ajx.responseText;
-            container.innerHTML = data;
+
+            cont.innerHTML = data;
             //document.getElementById(idForm).innerHTML = ajx.responseText;
         }
     };
-    var data=getFormData();
-    ajx.open("POST", `index.php?origin=${origin}`, true);
+
+
+    var data = "";
+    if (is_dataPost) {
+        data = getFormData();
+        if(is_file)
+        {
+            data.append('file', fileInputElement.files[0]);
+        }
+    }
+    ajx.open("POST", `index.php?origin=${o}`, true);
     ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajx.send(data);
 
 
     return false;
-        
-}
-
-function getFormData()
-{
-    //var form=document.getElementById(idForm);
-    var elements = document.getElementById("mainform").elements;
-    var data="";
-    for (var i = 0; i < elements.length; i++) {
-        var item = elements.item(i);
-
-                data += [item.name] + "=" + item.value;
-
-        if ((i + 1) != elements.length) {
-            data += "&";
-        }
-    }
-
-    return data;
 }

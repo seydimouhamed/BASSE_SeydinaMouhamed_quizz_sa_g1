@@ -1,4 +1,11 @@
+
+var container = document.getElementById('container');
+var page=document.getElementById('all');
+var test=document.getElementById('test');
+var inscription=document.getElementById('inscription');
+
 const inputs = document.getElementsByTagName("input");
+
 for (let input of inputs) {
     input.addEventListener("keyup", function (e) {
         if (e.target.hasAttribute("error")) {
@@ -23,6 +30,103 @@ document.getElementById("connexion").addEventListener("click", function (e) {
     }
     if (error) {
         e.preventDefault();
+
         return false;
     }
+    else {
+        sendData1('connexion',page,"true");
+        
+    }
 })
+
+inscription.onclick=()=>{
+        sendData1('inscription',container,"false");
+}
+
+
+// function sendData(o) {
+//     //document.getElementById(idForm).innerHTML = data;
+//    // container.innerHTML = "dlkqjfsd";
+
+//     var ajx = new XMLHttpRequest();
+//     ajx.onreadystatechange = function () {
+//         if (ajx.readyState == 4 && ajx.status == 200) {
+//             container.innerHTML = "dlkqjfsd";
+
+//             let dat = ajx.responseText;
+//             container.innerHTML = dat;
+//             //document.getElementById(idForm).innerHTML = ajx.responseText;
+//         }
+//     };
+//    // var data=getFormData();
+//     ajx.open("GET", "/quizzbd/controller/loadPage.php?origin=".o, true);
+//     ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//     ajx.send();
+
+
+//    return false;
+
+// }
+
+// function getFormData() {
+//     //var form=document.getElementById(idForm);
+//     var elements = document.getElementById("mainform").elements;
+//     var data = "";
+//     for (var i = 0; i < elements.length; i++) {
+//         var item = elements.item(i);
+
+//         data += [item.name] + "=" + item.value;
+
+//         if ((i + 1) != elements.length) {
+//             data += "&";
+//         }
+//     }
+
+//     return data;
+// }
+
+function getFormData() {
+    //var form=document.getElementById(idForm);
+    var elements = document.getElementById("mainform").elements;
+    var data = new FormData();
+    for (var i = 0; i < elements.length; i++) {
+        var item = elements.item(i);
+
+        data.append([item.name], item.value);
+
+        
+    }
+
+    return data;
+}
+
+
+function sendData1(o,cont,is_dataPost) {
+
+
+        var ajx = new XMLHttpRequest();
+        ajx.onreadystatechange = function () {
+            if (ajx.readyState == 4 && ajx.status == 200) {
+                let data = ajx.responseText;
+
+                cont.innerHTML = data;
+                //document.getElementById(idForm).innerHTML = ajx.responseText;
+            }
+        };
+
+
+      var  data="";
+        if(is_dataPost=="true")
+        {
+         data=getFormData();
+        
+        }
+        ajx.open("POST", `index.php?origin=${o}`, true);
+        //ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        ajx.send(data);
+
+
+        return false;
+}
+
+
