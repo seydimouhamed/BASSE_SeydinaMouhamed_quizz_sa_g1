@@ -1,7 +1,6 @@
 
 var container = document.getElementById('container');
 var page=document.getElementById('all');
-var test=document.getElementById('test');
 var inscription=document.getElementById('inscription');
 
 const inputs = document.getElementsByTagName("input");
@@ -100,6 +99,26 @@ function getFormData() {
     return data;
 }
 
+function sendDataNav(o, a, content) {
+
+    var cont = document.getElementById(content);
+    var ajx = new XMLHttpRequest();
+    ajx.onreadystatechange = function () {
+        if (ajx.readyState == 4 && ajx.status == 200) {
+            let data = JSON.parse(ajx.responseText);
+            var cont=document.getElementById(content)
+            cont.innerHTML = data['page'];
+            //document.getElementById(idForm).innerHTML = ajx.responseText;
+        }
+    };
+
+
+
+    ajx.open("POST", `index.php?origin=${o}&action=${a}`, true);
+    //ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    ajx.send();
+
+}
 
 function sendData1(o,cont,is_dataPost) {
 
@@ -107,9 +126,9 @@ function sendData1(o,cont,is_dataPost) {
         var ajx = new XMLHttpRequest();
         ajx.onreadystatechange = function () {
             if (ajx.readyState == 4 && ajx.status == 200) {
-                let data = ajx.responseText;
-
-                cont.innerHTML = data;
+                let data = JSON.parse(ajx.responseText);
+                    
+                cont.innerHTML = data['page'];
                 //document.getElementById(idForm).innerHTML = ajx.responseText;
             }
         };
@@ -122,6 +141,7 @@ function sendData1(o,cont,is_dataPost) {
         
         }
         ajx.open("POST", `index.php?origin=${o}`, true);
+        //ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         //ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         ajx.send(data);
 

@@ -1,0 +1,1 @@
+<?php include './views/commons/inscription_form.php';

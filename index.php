@@ -1,32 +1,64 @@
 <?php
+// define("WEBROOT","http://localhost/quizzbdV2");
+ define("WEBROOT","http://smb.alwaysdata.net/quizzbdV2");
+   define("ORIGIN","origin");
+   define("ACTION","action");
     require_once './controller/front.php';
-    if(isset($_GET['origin']))
+    require_once './controller/services.php';
+    if(isset($_GET[ORIGIN]))
     {
-            if($_GET['origin']==="connexion")
+            if($_GET[ORIGIN]==="connexion")
             {
+                
                 if(!empty($_POST))
-                {
+                 {
                     connexion($_POST);
 
-                }
+                 }
             }
-            else if($_GET['origin']==="inscription")
+            else if($_GET[ORIGIN]==="inscription")
             {
                 if(!empty($_POST))
                 {
-                    // var_dump($_POST);
-                    // var_dump($_FILES);
                    register($_POST,$_FILES);
                 }
                 else
                 {
-                    require_once './views/commons/inscription_form.php';
+                        require_once './views/commons/inscription_form.php';
                 }
             }
-            else if($_GET['origin']==='deconnexion')
+            else if($_GET[ORIGIN]==='deconnexion')
             {
                 unset($_SESSION['info_user']);
-                require_once './views/commons/temp_con.php';
+                header('location:index.php');
+            }
+            else if($_GET[ORIGIN]==='admin')
+            {
+                if(isset($_GET[ACTION]))
+                {
+                //$url='./views/admin/dashboard.php';
+                    $url='./views/admin/'.$_GET[ACTION].'.php';
+                  //  ob_start();
+                        include $url;
+                    // $content=ob_get_clean();
+                    // echo json_encode(array('page' => $content));
+                }else
+                {
+                    require_once './views/admin/accueil.php';
+                }
+            }
+            else if($_GET[ORIGIN]=='player')
+            {
+                    require_once './views/player/pageJeu.php';
+            }
+            else if($_GET[ORIGIN]=='services')
+            {
+                $post=[];
+                if(isset($_POST))
+                {
+                    $post=$_POST;
+                }
+                services($_GET[ACTION],$post);
             }
     }
     else

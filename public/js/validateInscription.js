@@ -109,9 +109,17 @@ function sendData2(o, cont, is_dataPost)
     var ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
         if (ajx.readyState == 4 && ajx.status == 200) {
-            let data = ajx.responseText;
 
-            cont.innerHTML = data;
+            let data = JSON.parse(ajx.responseText);
+            if(typeof data['page']!== "undefined")
+            {
+                cont.innerHTML = data['page'];
+            }
+            if(typeof data['message']!== 'undefined')
+            {
+                cont.innerHTML=data['message'];
+            }
+            
         }
     };
 

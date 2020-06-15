@@ -168,7 +168,7 @@ box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
             <div class="labip  col-md-3  col-lg-3 col-sm-3 col-3">Password</div>
             <div class="quadip"></div>
             <div class="ipd ">
-                <input type="text" name="pwd" error='error-pwd' class="form-control ip" id="pwd" />
+                <input type="password" name="pwd" error='error-pwd' class="form-control ip" id="pwd" />
           </div>
         </div>
         <small id="error-pwd" class="error text-danger "></small>
@@ -177,7 +177,7 @@ box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
             <div class="labip  col-md-3  col-lg-3 col-sm-3 col-3 small"> C.password</div>
             <div class="quadip"></div>
             <div class="ipd ">
-                <input type="text" name="cpwd" error='error-cpwd' class="form-control ip" id="cpwd" />
+                <input type="password" name="cpwd" error='error-cpwd' class="form-control ip" id="cpwd" />
           </div>
         </div>
         <small id="error-cpwd" class="error text-danger "></small>
@@ -196,4 +196,57 @@ box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
             <button type="submit" value='inscription' id="inscription2" name="inscription" class="form-control ubtn">S'Inscription</button>
         </div>
       </div>
-      </form>
+      </form>     
+<script>
+
+///const URL_ROOT="index.php?origin";
+ $('#form_register').on('submit',function(){
+       //var form=$('#form_register');
+        
+        var donne=new FormData($('#form_register')[0]);
+      //validations
+  
+        $.ajax({
+
+                type: "POST",
+                url: `${URL_ROOT}=inscription`,
+                //data: $('form').serialize(),
+                data: donne,
+                processData: false,
+                contentType:false,
+               // data:donne
+                dataType: "JSON",
+                success: function (data) {
+                   if(data){
+                       if(data['msg']['type']=='success')
+                       {
+                          
+                            if(data['info_user']['profil']==="admin")
+                            {
+                                $('#container').load('./views/admin//accueil.php'); 
+                            }else 
+                            {
+                                $("#all").load(`${URL_ROOT}=player`); 
+                            }
+                       }
+                       else
+                       {
+                        console.log(data);
+                           alert(''+data['msg']['text']);
+                       }
+                   }
+                }
+            });
+    })
+
+    // $('#inscription').click(function(){
+    //     const container = $('#container');
+    //     container.load(`pages/inscription.php`,function(response, status,detail){        
+    //      if(status === 'error'){
+    //         $("#container").html(`<p class="text-center alert alert-danger col">Le contenu demandé est introuvable!</p>`);
+    //         //ou bien
+    //         //$("#table").html(`<p class="text-center alert alert-danger col">Code Erreur : ${detail.status}, ${detail.statusText}</p>`);
+    //     }
+    // });
+    // })
+</script>

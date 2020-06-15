@@ -1,95 +1,75 @@
 <?php
 session_start();
  require_once './model/model.php';
+ require_once './model/question.model.php';
 
  function connexion($p)
  {
     $log=$p['login'];
     $pwd=$p['pwd'];
     $result=checkUserLog($log,$pwd);
-    if($result!==false)
+		$data=$result->fetch();
+    if($data!==false)
     {
-        $_SESSION['info_user']=$result;
-        if($result['profil']==="admin")
+		$_SESSION['info_user']=$data;
+        if($data['profil']==="admin")
         {
-           require_once './views/admin/accueil.php';
+			   echo "admin";
         }
         else
         {
-            //echo "ca marche player";
-           require_once './views/player/pageJeu.php';
+			$_SESSION['jeux']=getAllQuestions(5,0);
+			echo "jeux";
         }
     }
     else
     {
-        echo "erreur";
+        echo "error";
     }
  }
 
 
  // --------------------------------------------------------------------------------------------------------------------------------------------------------
- 	function register($d=array(),$f=array())
-	{
-        var_dump($d);
-		//array_walk($d, 'trim_value');
-		if(empty($d))
-		{
-            echo "c'est vide";
-			//require("view/player/inscriptionPlayer.php");
-		}
-		else
-		{
-			
-                //$msg=array();
-                echo "on est lsda";
-	
-				if( empty($d["login"]) || empty($d["firstname"]) || empty($d["pwd"]))
-				{
-					// $msg[]=array('type'=>'alert','text'=>'veuillez remplir tous les champs');
-                    // $_SESSION['msg']=$msg;
-                    echo "c'est vide";
-					//header("Location:index.php?origin=inscription");
-				}
-				else
-				{
-                    
-					if(!empty(getUserByUserName($d["login"])))
-					{
-                        echo "le login existe déjà";
-						//$msg[]=array('type'=>'alert','text'=>'Ce login est déjà utilisé!Veuillez choisir un autre login!');
-						// $_SESSION['msg']=$msg;
-						// $_SESSION['form']=$d;
-						
-					}
-					else
-					{
-                        $result=registeruser($d["login"],$d["pwd"],$d["firstname"],$d["lastname"],"admin",$f["avatar"]);
-                        var_dump($result);
-						if(!empty($result))
-						{
-							echo " erreur lors de l'inscription";
-							//header("Location:index.php?action=register");
-		
-						}
-						else
-						{
-                            echo "enregistrement reussie";
-							// $msg[]=array('type'=>'succes','text'=>'Le compte a été créer avec succes!');
-							// $_SESSION['msg']=$msg;
-							// $_SESSION['form']=array();
 
-							// if($d["profil"]=="user")
-							// {
-							// 	$dl=array('username'=>$d['login'],'password'=>$d['pwd']);
-							// 	login($dl);
-							// }
-							// else
-							// {
-							// 	header("Location:index.php?origin=admin");
-							// }
-						}
-					}
-				}
-			}
-		
-	}
+function register($post,$file)
+{
+
+      $d=$post;
+      $f=$file;
+      $profil="play";
+
+
+       if(isset($_SESSION['profil']) && $_SESSION['profil']==='admin')
+       {
+            $profil='admin';
+       }
+
+      if(getUserByUserName($d["login"])!==false)
+      {
+            $message['msg'] = array('text' => "Ce login existe déjà","type"=>'alert' );
+            echo json_encode($message);
+
+      }else
+        {
+      		$result=registeruser($d["login"],$d["pwd"],$d["firstname"],$d["lastname"],$profil,$f["avatar"]);
+
+            if($result!==false)
+            {
+                    $userInfo=getUserByUserName($d["login"]);
+                    $message['msg'] = array('text' => "connecter avec succes","type"=>'success' );
+                    $message['info_user']=$userInfo;
+                    if($profil=="play")
+                    {
+						$_SESSION['info_user']=$userInfo;
+						$_SESSION['jeux']=getAllQuestions(5,0);
+                    }
+                    
+                    echo json_encode($message);
+            }
+            else
+            {		$message['erreur']=$result;
+                    $message['msg'] = array('text' => "Echec lors de l'inscription","type"=>'alert' );
+                    echo json_encode($message);
+            }
+        }
+ }

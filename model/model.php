@@ -5,7 +5,8 @@
         
             try
             {
-                $oPDO = new PDO('mysql:host=localhost;dbname=quizzbd;charset=utf8', 'root', 'passemouhamed');
+                //$oPDO = new PDO('mysql:host=localhost;dbname=quizzbd;charset=utf8', 'root', 'passemouhamed');
+                $oPDO = new PDO('mysql:host=mysql-smb.alwaysdata.net;dbname=smb_quizz2;charset=utf8', 'smb', 'passemouhamed');
             }
             catch (PDOException $e)
             {
@@ -30,7 +31,7 @@
 	function checkUserLog($log,$pwd)
 	{
         $db=getConnexion();
-        $req=$db->prepare('SELECT * FROM connexions WHERE login = :login AND password = :password');
+        $req=$db->prepare('SELECT c.id,c.profil,c.login,u.firstname, u.lastname, u.photo FROM connexions c JOIN utilisateur u on c.id=u.id_connexions WHERE c.login = :login AND c.password = :password');
 
         $req->execute(array('login'=>$log,'password'=>$pwd));
 
@@ -39,6 +40,25 @@
 
     }	
     
+        function getAllUsers($limit=5,$offset=0)
+    {
+      //  $db=$GLOBALS['db'];//statut a ajouter apres 
+        $db=getConnexion();
+        $sql ="
+            SELECT c.id,c.profil,c.login, u.firstname, u.lastname, u.photo
+            FROM  connexions c JOIN utilisateur u on c.id=u.id_connexions
+            LIMIT {$limit} 
+            OFFSET {$offset}
+    ";
+
+       // $req=$db->query('SELECT c.id,c.profil,c.login, u.firstname, u.lastname, u.photo FROM connexions c JOIN utilisateur u on c.id=u.id_connexions LIMIT 5');
+        $req=$db->query($sql);
+          //  $req->execute();
+
+        return $req->fetchAll(2);
+           
+
+    }
 
 
 //----------------------------------------------------------------------------------------------------------------
@@ -107,24 +127,43 @@
 function registeruser($log,$pwd,$fn,$ln,$pfl,$f_imguser)
 { 
 			$db=getConnexion();          
-            $avatar=registerUserAvatar($f_imguser);
+                    
+            //$avatar="lion.png";
+           $avatar=registerUserAvatar($f_imguser);
 
-            $infocon=array("login"=>$log,"pwd"=>$pwd,"profil"=>$pfl);
+            //hachage du mot de passe!
+           // $passwordHash = password_hash($pwd, PASSWORD_BCRYPT, array("cost" => 12));
+             $passwordHash = $pwd;
 
-            $sql_con=('INSERT INTO connexions VALUES(DEFAULT,:login,:pwd,:profil)');
-            $req_con=$db->prepare($sql_con);
+            $infocon=array("login"=>$log,"pwd"=>$passwordHash,"profil"=>$pfl);
 
-            $req_con->execute($infocon);
-            $id=$db->lastInsertId();
-
-            $sql_user=('INSERT INTO utilisateur VALUES(DEFAULT,:firstname,:lastname,:photo,now(),:id)');
+            $sql_con='INSERT INTO connexions VALUES(DEFAULT,:login,:pwd,:profil, default)';
+            $sql_user='INSERT INTO utilisateur VALUES(DEFAULT,:firstname,:lastname,:photo,now(),:id)';
             
-            $userInfo=array("firstname"=>$fn,"lastname"=>$ln,"photo"=>$avatar,"id"=>$id);
-            
-            $req_insert=$db->prepare($sql_user);
-            $req_insert->execute($userInfo);
+            try
+            {
+            //commencer la transaction
 
-           return $req_insert->fetch();
+                //$db->beginTransaction();
+                $req_con=$db->prepare($sql_con);
+
+                $req_con->execute($infocon);
+                $id=$db->lastInsertId();
+
+                
+                $userInfo=array("firstname"=>$fn,"lastname"=>$ln,"photo"=>$avatar,"id"=>$id);
+                
+                $req_insert=$db->prepare($sql_user);
+                $req_insert->execute($userInfo);
+
+                // $db->commit();
+                return true;
+
+            }
+            catch(PDOException $e)
+            {
+                return $e;
+            }
             
 }
 
